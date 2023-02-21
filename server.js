@@ -59,19 +59,9 @@ const departmentData = [
     {
         type: 'input',
         message: 'What is the name of the department?',
-        name: 'name',
+        name: 'department_name',
       },
-      {
-        type: 'input',
-        message: 'What is the salary of the role?',
-        name: 'salary',
-      },
-      {
-        type: 'input',
-        message: 'What is the department this role is in?',
-        name: 'department_id',
-      },
-]
+];
 
 const manageEmployees = [
     {
@@ -82,7 +72,6 @@ const manageEmployees = [
             'View all Departments',
             'View all Roles',
             'View all Employees',
-            ,
             'Add Role',
             'Add Employee',
             'Update Employee Role',
@@ -107,8 +96,31 @@ function init(){
                 })
             })
         } else if (data.choices === 'View all Roles'){
-            inquirer.prompt()
-            
+            db.query('SELECT * FROM role', (err, results) => {
+                if(err) throw err
+                console.table(results);
+                init()
+            })
+        } else if (data.choices === 'View all Employees'){
+            db.query('SELECT * FROM employee', (err, results) => {
+                if(err) throw err
+                console.table(results);
+                init()
+            })
+        } else if (data.choices === 'Add Role'){
+            inquirer.prompt(roleData).then(data => {
+                db.query('INSERT INTO role SET ?', data, (err, results) => {
+                    console.table(results);
+                    init()
+                })
+            })
+        } else if (data.choices === 'Add Employee') {
+            inquirer.prompt(employeeData).then(data => {
+                db.query('INSERT INTO employee SET ?', data, (err, results) => {
+                    console.table(results);
+                    init()
+                })
+            })
         }
     } )
 };
